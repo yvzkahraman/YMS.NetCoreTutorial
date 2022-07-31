@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using YMS.EfCoreTutorial.Contexts;
 
@@ -10,9 +11,10 @@ using YMS.EfCoreTutorial.Contexts;
 namespace YMS.EfCoreTutorial.Migrations
 {
     [DbContext(typeof(YMSContext))]
-    partial class YMSContextModelSnapshot : ModelSnapshot
+    [Migration("20220731192637_AppRoleTableAdded")]
+    partial class AppRoleTableAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

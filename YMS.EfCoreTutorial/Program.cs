@@ -14,7 +14,9 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     opt.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
     opt.Cookie.HttpOnly = true;
     opt.Cookie.Name = "YMSCookie";
-    opt.LoginPath = new PathString("/YMS/Login");
+    opt.LoginPath = new PathString("/Auth/Login");
+    opt.LogoutPath = new PathString("/Auth/Logout");
+    opt.AccessDeniedPath = new PathString("/Auth/AccessDenied");
 });
 
 

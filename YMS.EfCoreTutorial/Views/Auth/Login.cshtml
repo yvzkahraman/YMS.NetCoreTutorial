@@ -1,0 +1,42 @@
+﻿@model UserLoginModel
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title></title>
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+    <link rel="stylesheet" href="/twitter-bootstrap/css/bootstrap.min.css" />
+</head>
+<body>
+    <section class="container my-5">
+        <form method="post" asp-action="Login" asp-controller="Auth" class="w-75 mx-auto p-5 shadow">
+            <div class="mb-3 text-center">
+                <h5>Signin</h5>
+            </div>
+
+            <div class="mb-3">
+                <label>Username :</label>
+                <span asp-validation-for="@Model.Username" class="text-danger"></span>
+                <input type="text" class="form-control" asp-for="@Model.Username" />
+            </div>
+
+            <div class="mb-3">
+                <label>Password :</label>
+                    <span asp-validation-for="@Model.Password" class="text-danger"></span>
+                <input type="password" class="form-control" asp-for="@Model.Password" />
+            </div>
+
+            <div asp-validation-summary="ModelOnly" class="text-danger">
+
+            </div>
+
+            <div class="mb-3">
+                <div class="w-50 mx-auto">
+                    <button type="submit" class="btn btn-primary btn-block w-100">Submit</button>
+                </div>
+
+            </div>
+        </form>
+    </section>
+</body>
+</html>

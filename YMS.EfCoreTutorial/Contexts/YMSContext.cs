@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using YMS.EfCoreTutorial.Configurations;
 using YMS.EfCoreTutorial.Entities;
 
 namespace YMS.EfCoreTutorial.Contexts
@@ -16,13 +17,14 @@ namespace YMS.EfCoreTutorial.Contexts
         public DbSet<AppUser> AppUsers => Set<AppUser>();
         public DbSet<Employee> Employees => Set<Employee>();
 
-        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        //{
-        //    optionsBuilder.UseSqlServer("server=(localdb)\\mssqllocaldb; database=YMSDb2; integrated security=true;");
-        //    base.OnConfiguring(optionsBuilder);
-        //}
+        public DbSet<Address> Addresses => Set<Address>();
+        public DbSet<AppRole> AppRoles =>Set<AppRole>();
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.ApplyConfiguration(new AppRoleConfiguration());
+            modelBuilder.ApplyConfiguration(new AppUserConfiguration());
+            modelBuilder.ApplyConfiguration(new EmployeeConfiguration());
+            modelBuilder.ApplyConfiguration(new AddressConfiguration());
             base.OnModelCreating(modelBuilder);
         }
     }

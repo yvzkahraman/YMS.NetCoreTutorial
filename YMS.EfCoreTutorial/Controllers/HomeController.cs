@@ -26,6 +26,7 @@ namespace YMS.EfCoreTutorial.Controllers
             return View();
         }
 
+        [Authorize]
         [HttpGet]
         public IActionResult Index()
         {
