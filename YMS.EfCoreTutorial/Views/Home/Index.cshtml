@@ -26,8 +26,8 @@
                 <td>@employee.Name</td>
                 <td>@employee.Surname</td>
                 <td>
-                    <button class="btn btn-danger">Delete</button>
-                    <button class="btn btn-warning">Edit</button>
+                    <a href="/Home/Remove/@(employee.Id)" class="btn btn-danger">Delete</a>
+                    <a href="/Home/Update/@(employee.Id)" class="btn btn-warning">Edit</a>
                 </td>
             </tr>
         }

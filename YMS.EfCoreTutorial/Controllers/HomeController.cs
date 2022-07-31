@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using YMS.EfCoreTutorial.Contexts;
 using YMS.EfCoreTutorial.Entities;
 using YMS.EfCoreTutorial.Models;
@@ -17,54 +18,66 @@ namespace YMS.EfCoreTutorial.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles="Member")]
         public IActionResult Index()
         {
             YMSContext context = new YMSContext();
-            List<Employee> employees = context.Employees.ToList();
+            List<Employee> employees = context.Employees.AsNoTracking().ToList();
+
+            
 
             return View(employees);
         }
 
         [HttpGet]
-        [Authorize(Roles="Admin")]
         public IActionResult Create()
         {
             // Validation Login register cookie based auth / devextreme
 
             // 
-            return View(new CreateEmployeeRequestModel());
+            return View(new CreateEmployeeModel());
         }
 
         [HttpPost]
-        public IActionResult Create(CreateEmployeeRequestModel employeeRequestModel)
+        public IActionResult Create(CreateEmployeeModel employeeRequestModel)
         {
-            //AutoMapper
-            YMSContext context = new YMSContext();
-            // Tracking 
-            var mappedData = _mapper.Map<Employee>(employeeRequestModel);
-            
+            if (ModelState.IsValid)
+            {
+                //AutoMapper
+                YMSContext context = new YMSContext();
+                // Tracking 
+                var mappedData = _mapper.Map<Employee>(employeeRequestModel);
+
+                context.Employees.Add(mappedData);
+                // herhangi bir komut gitmez.
 
 
+                var entry = context.Entry(mappedData);
+
+                context.SaveChanges();
+
+                // ef nasıl oluyorda bu add'i gördüğünde eklemeyi nasıl yapar.
+                // entrystate=> state 
 
 
-            context.Employees.Add(mappedData);
-            // herhangi bir komut gitmez.
+                //if(effectedRows > 0)
+                //{
+                //    // başarılı
+                //}
+                //effected rows
+            }
 
-           
-           var entry =  context.Entry(mappedData);
+            return RedirectToAction("Index");
+        }
 
-            context.SaveChanges();
-
-            // ef nasıl oluyorda bu add'i gördüğünde eklemeyi nasıl yapar.
-            // entrystate=> state 
-
-
-            //if(effectedRows > 0)
-            //{
-            //    // başarılı
-            //}
-            //effected rows
+        public IActionResult Remove(int id)
+        {
+            YMSContext ymsContext = new YMSContext();
+            var deletedEntity = ymsContext.Employees.Find(id);
+            if (deletedEntity != null)
+            {
+                ymsContext.Employees.Remove(deletedEntity);
+                ymsContext.SaveChanges();
+            }
             return RedirectToAction("Index");
         }
 
@@ -85,6 +98,30 @@ namespace YMS.EfCoreTutorial.Controllers
             YMSContext context = new YMSContext();
 
             context.Employees.Add(employee);
+            context.SaveChanges();
+
+            return RedirectToAction("Index");
+        }
+
+        public IActionResult Update(int id)
+        {
+            var context = new YMSContext();
+            var updatedEmployee = context.Employees.AsNoTracking().SingleOrDefault(x=>x.Id == id);
+            var mappedData = _mapper.Map<UpdateEmployeeModel>(updatedEmployee);
+
+            return View(mappedData);
+        }
+
+        [HttpPost]
+        public IActionResult Update(UpdateEmployeeModel model)
+        {
+            var context = new YMSContext();
+            var updatedEntity = context.Employees.SingleOrDefault(x=>x.Id == model.Id);
+
+            updatedEntity.Name = model.Name;
+            updatedEntity.Surname = model.Surname;
+
+
             context.SaveChanges();
 
             return RedirectToAction("Index");

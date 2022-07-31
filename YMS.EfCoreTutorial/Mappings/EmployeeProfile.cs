@@ -8,7 +8,8 @@ namespace YMS.EfCoreTutorial.Mappings
     {
         public EmployeeProfile()
         {
-            this.CreateMap<CreateEmployeeRequestModel, Employee>().ReverseMap();
+            this.CreateMap<CreateEmployeeModel, Employee>().ReverseMap();
+            this.CreateMap<UpdateEmployeeModel,Employee>().ReverseMap();
         }
     }
 }

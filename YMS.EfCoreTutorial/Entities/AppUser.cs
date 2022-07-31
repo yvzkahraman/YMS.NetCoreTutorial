@@ -2,6 +2,7 @@
 
 namespace YMS.EfCoreTutorial.Entities
 {
+    //SRP => S => Single Responsibility 
     public class AppUser
     {
         public int Id { get; set; }
