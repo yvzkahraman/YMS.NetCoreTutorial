@@ -25,9 +25,10 @@
                 <td>@employee.Id</td>
                 <td>@employee.Name</td>
                 <td>@employee.Surname</td>
+                @*<getAddressData id="@employee.Id"></getAddressData>*@
                 <td>
-                    <a href="/Home/Remove/@(employee.Id)" class="btn btn-danger">Delete</a>
-                    <a href="/Home/Update/@(employee.Id)" class="btn btn-warning">Edit</a>
+                    <a asp-action="Remove" asp-controller="Home" asp-route-id="@employee.Id" class="btn btn-danger">Delete</a>
+                    <a asp-action="Update" asp-controller="Home" asp-route-id="@employee.Id" class="btn btn-warning">Edit</a>
                 </td>
             </tr>
         }

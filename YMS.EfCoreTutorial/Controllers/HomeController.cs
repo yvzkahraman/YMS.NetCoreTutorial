@@ -11,20 +11,26 @@ namespace YMS.EfCoreTutorial.Controllers
     public class HomeController : Controller
     {
         private readonly IMapper _mapper;
+        private readonly YMSContext _context;
 
-        public HomeController(IMapper mapper)
+        public HomeController(IMapper mapper, YMSContext context)
         {
             _mapper = mapper;
+            _context = context;
+        }
+
+
+        [Authorize]
+        public IActionResult Secure()
+        {
+            return View();
         }
 
         [HttpGet]
         public IActionResult Index()
         {
-            YMSContext context = new YMSContext();
-            List<Employee> employees = context.Employees.AsNoTracking().ToList();
 
-            
-
+            List<Employee> employees = _context.Employees.AsNoTracking().ToList();
             return View(employees);
         }
 
@@ -32,7 +38,6 @@ namespace YMS.EfCoreTutorial.Controllers
         public IActionResult Create()
         {
             // Validation Login register cookie based auth / devextreme
-
             // 
             return View(new CreateEmployeeModel());
         }
@@ -40,43 +45,30 @@ namespace YMS.EfCoreTutorial.Controllers
         [HttpPost]
         public IActionResult Create(CreateEmployeeModel employeeRequestModel)
         {
+            // <input asp-for ="@Model.Name" /> 
+            // <input Name="Name" id="Name" value = @Model.Name />
+            // custom tag helper viewComponent => kendi kendilerine bir controller veya action ihtiyacı olmadan çalışabilmeli
+            // asp-for asp-validation-for asp-action asp-controller asp-route
             if (ModelState.IsValid)
             {
-                //AutoMapper
-                YMSContext context = new YMSContext();
-                // Tracking 
+
                 var mappedData = _mapper.Map<Employee>(employeeRequestModel);
-
-                context.Employees.Add(mappedData);
-                // herhangi bir komut gitmez.
-
-
-                var entry = context.Entry(mappedData);
-
-                context.SaveChanges();
-
-                // ef nasıl oluyorda bu add'i gördüğünde eklemeyi nasıl yapar.
-                // entrystate=> state 
-
-
-                //if(effectedRows > 0)
-                //{
-                //    // başarılı
-                //}
-                //effected rows
+                _context.Employees.Add(mappedData);
+                _context.SaveChanges();
+                return RedirectToAction("Index");
             }
+            return View(employeeRequestModel);
 
-            return RedirectToAction("Index");
         }
 
         public IActionResult Remove(int id)
         {
-            YMSContext ymsContext = new YMSContext();
-            var deletedEntity = ymsContext.Employees.Find(id);
+
+            var deletedEntity = _context.Employees.Find(id);
             if (deletedEntity != null)
             {
-                ymsContext.Employees.Remove(deletedEntity);
-                ymsContext.SaveChanges();
+                _context.Employees.Remove(deletedEntity);
+                _context.SaveChanges();
             }
             return RedirectToAction("Index");
         }
@@ -95,18 +87,20 @@ namespace YMS.EfCoreTutorial.Controllers
                     Definition="Adres 1"
                 }
             };
-            YMSContext context = new YMSContext();
 
-            context.Employees.Add(employee);
-            context.SaveChanges();
+
+            _context.Employees.Add(employee);
+            _context.SaveChanges();
 
             return RedirectToAction("Index");
         }
 
         public IActionResult Update(int id)
         {
-            var context = new YMSContext();
-            var updatedEmployee = context.Employees.AsNoTracking().SingleOrDefault(x=>x.Id == id);
+            // Microsoft.Extensions.DependencyInjection
+            //Dependency Injection => Dependency Inversion  => Bağımlı Olma !!! 
+
+            var updatedEmployee = _context.Employees.AsNoTracking().SingleOrDefault(x => x.Id == id);
             var mappedData = _mapper.Map<UpdateEmployeeModel>(updatedEmployee);
 
             return View(mappedData);
@@ -115,16 +109,21 @@ namespace YMS.EfCoreTutorial.Controllers
         [HttpPost]
         public IActionResult Update(UpdateEmployeeModel model)
         {
-            var context = new YMSContext();
-            var updatedEntity = context.Employees.SingleOrDefault(x=>x.Id == model.Id);
+            if (ModelState.IsValid)
+            {
 
-            updatedEntity.Name = model.Name;
-            updatedEntity.Surname = model.Surname;
+                var updatedEntity = _context.Employees.SingleOrDefault(x => x.Id == model.Id);
+
+                updatedEntity.Name = model.Name;
+                updatedEntity.Surname = model.Surname;
 
 
-            context.SaveChanges();
+                _context.SaveChanges();
 
-            return RedirectToAction("Index");
+                return RedirectToAction("Index");
+            }
+
+            return View(model);
         }
     }
 }

@@ -7,7 +7,7 @@ namespace YMS.EfCoreTutorial.Models
         [Required(ErrorMessage = "Name is required")]
         public string? Name { get; set; }
 
-        [Required(ErrorMessage ="Surname is required")]
+        [Required(ErrorMessage = "Surname is required")]
         public string? Surname { get; set; }
     }
 }

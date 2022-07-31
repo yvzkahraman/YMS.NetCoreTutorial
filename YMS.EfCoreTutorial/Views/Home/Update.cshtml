@@ -4,18 +4,20 @@
 }
 
 
-<form method="post" action="/Home/Update">
+<form method="post" asp-action="Update" asp-controller="Home">
 
-    <input type="hidden" name="Id" value="@Model.Id" />
+    <input type="hidden" asp-for="@Model.Id" />
 
     <div class="mb-3">
         <label  class="form-label">Name :</label>
-        <input type="text" class="form-control" name="Name" value="@Model.Name">
+        <span asp-validation-for="@Model.Name" class="text-danger"></span>
+        <input type="text" class="form-control" asp-for="@Model.Name">
         
     </div>
     <div class="mb-3">
         <label class="form-label">Surname :</label>
-        <input type="text" class="form-control" name="Surname" value="@Model.Surname">
+        <span asp-validation-for="@Model.Surname" class="text-danger"></span>
+        <input type="text" class="form-control" asp-for="@Model.Surname">
     </div>
     
     <button type="submit" class="btn btn-primary">Submit</button>
